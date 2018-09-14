@@ -2033,7 +2033,7 @@ There are three kinds of operation:
 
 If an operation has an identifier but no <emu-t>static</emu-t>
 keyword, then it declares a <dfn id="dfn-regular-operation" export>regular operation</dfn>.
-If the operation has a 
+If the operation has a
 [=special keyword=]
 used in its declaration (that is, any keyword matching
 <emu-nt><a href="#prod-Special">Special</a></emu-nt>, or
@@ -6403,7 +6403,7 @@ byte values using that reference.
 
 Attempting to [=get a reference to the buffer source|get a reference to=] or
 [=get a copy of the buffer source|get a copy of the bytes held by a buffer source=]
-when the {{ArrayBuffer}} has been [=detach|detached=]
+when the {{ArrayBuffer}} has been [=ArrayBuffer/detach|detached=]
 will fail in a language binding-specific manner.
 
 Note: See [[#es-buffer-source-types]] below for
@@ -11111,7 +11111,10 @@ in which case they are exposed on every object that implements the interface.
                     the global object does not implement |target| and [{{LenientThis}}] is not
                     specified.)
                     <!-- https://www.w3.org/Bugs/Public/show_bug.cgi?id=18547#c9 -->
-                1.  Otherwise, set |O| to the <emu-val>this</emu-val> value.
+                1.  Otherwise:
+                    1.  Set |O| to ! <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+                    1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a
+                        abstract-op>\[[Window]]</a>.
                 1.  If |O| is a [=platform object=], then [=perform a security check=], passing |O|,
                     |attribute|'s [=identifier=], and "getter".
                 1.  If |O| is not a [=platform object=] that implements the interface |target|,
@@ -11159,7 +11162,10 @@ in which case they are exposed on every object that implements the interface.
                 the global object does not implement |target| and [{{LenientThis}}] is not
                 specified.)
                 <!-- https://www.w3.org/Bugs/Public/show_bug.cgi?id=18547#c9 -->
-            1.  Otherwise, set |O| to the <emu-val>this</emu-val> value.
+            1.  Otherwise:
+                1.  Set |O| to ! <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+                1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a
+                    abstract-op>\[[Window]]</a>.
             1.  If |O| is a [=platform object=], then [=perform a security check=], passing |O|,
                 |id|, and "setter".
             1.  Let |validThis| be true if |O| is a [=platform object=] that implements the
@@ -11288,7 +11294,10 @@ in which case they are exposed on every object that implements the interface.
                     will subsequently cause a {{ECMAScript/TypeError}} in a few steps, if the global
                     object does not implement |target|.)
                     <!-- https://www.w3.org/Bugs/Public/show_bug.cgi?id=18547#c9 -->
-                1.  Otherwise, set |O| to the <emu-val>this</emu-val> value.
+                1.  Otherwise:
+                    1.  Set |O| to ! <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+                    1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a
+                        abstract-op>\[[Window]]</a>.
                 1.  If |O| is a [=platform object=], then [=perform a security check=], passing |O|,
                     |id|, and "method".
                 1.  If |O| is not a [=platform object=] that implements the interface |target|,
@@ -11505,7 +11514,8 @@ then there must exist a property with the following characteristics:
 
         The value of the property is a [=built-in function object=], which behaves as follows:
 
-        1.  Let |O| be the result of calling <a abstract-op>ToObject</a> on the <emu-val>this</emu-val> value.
+        1.  Let |O| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+        1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
         1.  If |O| is a [=platform object=],
             then [=perform a security check=], passing:
             *   the platform object |O|,
@@ -11569,7 +11579,8 @@ then the [=function object=] is {{%ArrayProto_values%}}.
     If the interface has a [=pair iterator=], then the [=function object=] is a [=built-in function object=] that,
     when invoked, must behave as follows:
 
-    1.  Let |object| be the result of calling <a abstract-op>ToObject</a> on the <emu-val>this</emu-val> value.
+    1.  Let |object| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+    1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
     1.  If |object| is a [=platform object=],
         then [=perform a security check=], passing:
         *   the platform object |object|,
@@ -11590,7 +11601,8 @@ then the [=function object=] is {{%ArrayProto_values%}}.
     then the [=function object=] is a [=built-in function object=] that,
     when invoked, must behave as follows:
 
-    1.  Let |object| be the result of calling <a abstract-op>ToObject</a> on the <emu-val>this</emu-val> value.
+    1.  Let |object| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+    1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
     1.  If |object| is a [=platform object=],
         then [=perform a security check=], passing:
         *   the platform object |object|,
@@ -11657,7 +11669,7 @@ then the [=function object=] is {{%ArrayProto_forEach%}}.
 
     with the following prose definition:
 
-    1.  Let |O| be the <emu-val>this</emu-val> value.
+    1.  Let |O| be this object.
     1.  Let |pairs| be the list of [=value pairs to iterate over=].
     1.  Let |i| be 0.
     1.  While |i| is less than the length of |pairs|:
@@ -11677,7 +11689,8 @@ then the [=function object=] is {{%ArrayProto_forEach%}}.
     If the interface has a [=maplike declaration=] or [=setlike declaration=] then
     the method, when invoked, must behave as follows:
 
-    1.  Let |object| be the result of calling <a abstract-op>ToObject</a> on the <emu-val>this</emu-val> value.
+    1.  Let |O| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+    1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
     1.  If |object| is a [=platform object=],
         then [=perform a security check=], passing:
         *   the platform object |object|,
@@ -11766,7 +11779,9 @@ then the [=function object=] is {{%ArrayProto_keys%}}.
     If the interface has a [=pair iterator=],
     then the method, when invoked, must behave as follows:
 
-    1.  Let |object| be the result of calling <a abstract-op>ToObject</a> on the <emu-val>this</emu-val> value.
+    1.  Let |object| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+    1.  If |object| is a {{WindowProxy}} object, set |object| to |object|.<a
+        abstract-op>\[[Window]]</a>.
     1.  If |object| is a [=platform object=],
         then [=perform a security check=], passing:
         *   the platform object |object|,
@@ -11810,7 +11825,9 @@ the value of the {{@@iterator}} property.
     If the interface has a [=pair iterator=],
     then the method, when invoked, must behave as follows:
 
-    1.  Let |object| be the result of calling <a abstract-op>ToObject</a> on the <emu-val>this</emu-val> value.
+    1.  Let |object| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+    1.  If |object| is a {{WindowProxy}} object, set |object| to |object|.<a
+        abstract-op>\[[Window]]</a>.
     1.  If |object| is a [=platform object=],
         then [=perform a security check=], passing:
         *   the platform object |object|,
@@ -11881,7 +11898,9 @@ must be {{%IteratorPrototype%}}.
 
     1.  Let |interface| be the [=interface=] for which the
         [=iterator prototype object=] exists.
-    1.  Let |object| be the result of calling <a abstract-op>ToObject</a> on the <emu-val>this</emu-val> value.
+    1.  Let |object| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+    1.  If |object| is a {{WindowProxy}} object, set |object| to |object|.<a
+        abstract-op>\[[Window]]</a>.
     1.  If |object| is a [=platform object=],
         then [=perform a security check=], passing:
         *   the platform object |object|,
@@ -11946,7 +11965,8 @@ These additional properties are described in the sub-sections below.
     <dfn id="dfn-forwards-to-the-internal-map-object" export>forwards to the internal map object</dfn>
     for a given function name.  Such functions behave as follows when invoked:
 
-    1.  Let |O| be the <emu-val>this</emu-val> value.
+    1.  Let |O| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+    1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
     1.  Let |arguments| be the list of arguments passed to this function.
     1.  Let |name| be the function name.
     1.  If |O| is a [=platform object=],
@@ -11977,7 +11997,8 @@ with the following characteristics:
         The [=map size getter=] is a [=built-in function object=]
         whose behavior when invoked is as follows:
 
-        1.  Let |O| be the <emu-val>this</emu-val> value.
+        1.  Let |O| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+        1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
         1.  If |O| is a [=platform object=],
             then [=perform a security check=], passing:
             *   the platform object |O|,
@@ -12028,7 +12049,8 @@ For both of <code class="idl">get</code> and <code class="idl">has</code>, there
         The value of the property is a [=built-in function object=]
         that behaves as follows when invoked:
 
-        1.  Let |O| be the <emu-val>this</emu-val> value.
+        1.  Let |O| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+        1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
         1.  Let |name| be the name of the property – "<code>get</code>" or "<code>has</code>".
         1.  If |O| is a [=platform object=],
             then [=perform a security check=], passing:
@@ -12081,7 +12103,8 @@ must exist on |A|’s
 
         The value of the property is a [=built-in function object=] that behaves as follows when invoked:
 
-        1.  Let |O| be the <emu-val>this</emu-val> value.
+        1.  Let |O| be [=?=] <a abstract-op>ToObject</a>(<emu-val>this</emu-val> value).
+        1.  If |O| is a {{WindowProxy}} object, set |O| to |O|.<a abstract-op>\[[Window]]</a>.
         1.  If |O| is a [=platform object=],
             then [=perform a security check=], passing:
             *   the platform object |O|,
